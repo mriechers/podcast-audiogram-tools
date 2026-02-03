@@ -19,7 +19,7 @@ interface TextOverlayProps {
 }
 
 /**
- * Text overlay component for Wonder Cabinet podcast metadata.
+ * Text overlay component for podcast episode metadata.
  * Includes show logo, episode info, and guest name.
  * Responsive to aspect ratio with appropriate text sizing and positioning.
  */

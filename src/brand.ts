@@ -1,13 +1,13 @@
 /**
- * Wonder Cabinet Brand Configuration
+ * Brand Configuration
  *
  * Colors, typography, and asset references for consistent branding
- * across all video compositions.
+ * across all video compositions. Customize these values for your podcast.
  */
 
 export const brand = {
   colors: {
-    /** Primary brand green - "Wonder Cabinet Green" */
+    /** Primary brand green */
     primary: "#10a544",
     /** Darker green for gradients */
     primaryDark: "#0d8a38",

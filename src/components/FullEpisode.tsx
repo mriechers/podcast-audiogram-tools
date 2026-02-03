@@ -27,7 +27,7 @@ export interface FullEpisodeProps {
  *
  * Layout:
  * - Background: Animated galaxy spiral with floating particles
- * - Center: Wonder Cabinet logo, episode info, guest name
+ * - Center: Show logo, episode info, guest name
  * - Bottom: Waveform visualization
  * - Audio: Full episode audio track
  */

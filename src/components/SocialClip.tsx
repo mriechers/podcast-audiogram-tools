@@ -27,7 +27,7 @@ export interface SocialClipProps {
  *
  * Layout optimized for vertical viewing:
  * - Background: Animated galaxy spiral (adapted for vertical)
- * - Top: Wonder Cabinet logo, guest name, optional hook text
+ * - Top: Show logo, guest name, optional hook text
  * - Center: Large waveform visualization
  * - Audio: Clip audio track
  *

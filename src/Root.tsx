@@ -62,7 +62,7 @@ const originalTemplateDefaultProps = {
 };
 
 /**
- * Root component that registers all Wonder Cabinet video compositions.
+ * Root component that registers all podcast video compositions.
  *
  * Compositions:
  * - FullEpisode: 16:9 @ 1920x1080 for YouTube

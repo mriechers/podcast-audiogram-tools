@@ -16,6 +16,7 @@ import fs from "fs";
 import path from "path";
 import { spawn, ChildProcess } from "child_process";
 import { uploadVideo, generateDescription } from "./youtube-upload";
+import { brand } from "../brand";
 import "dotenv/config";
 
 // Configuration
@@ -232,11 +233,11 @@ async function renderJob(job: RenderJob): Promise<void> {
 
             let videoTitle: string;
             if (episodeNum && title) {
-              videoTitle = `Episode ${episodeNum}: ${title} | Wonder Cabinet`;
+              videoTitle = `Episode ${episodeNum}: ${title} | ${brand.show.name}`;
             } else if (episodeNum) {
-              videoTitle = `Episode ${episodeNum}: ${guestName} | Wonder Cabinet`;
+              videoTitle = `Episode ${episodeNum}: ${guestName} | ${brand.show.name}`;
             } else {
-              videoTitle = `${guestName} | Wonder Cabinet`;
+              videoTitle = `${guestName} | ${brand.show.name}`;
             }
 
             const result = await uploadVideo({
@@ -247,7 +248,7 @@ async function renderJob(job: RenderJob): Promise<void> {
                 episodeNumber: episodeNum as number | undefined,
                 title,
               }),
-              tags: ["Wonder Cabinet", "podcast", "science", "curiosity", "WPR"],
+              tags: [brand.show.name, "podcast"],
               privacyStatus: "private",
             });
 
@@ -315,7 +316,7 @@ export async function processQueue(): Promise<void> {
   saveQueue(state);
 
   console.log("═".repeat(60));
-  console.log("Wonder Cabinet Render Queue");
+  console.log("Audiogram Tools - Render Queue");
   console.log("═".repeat(60));
 
   const status = getQueueStatus();

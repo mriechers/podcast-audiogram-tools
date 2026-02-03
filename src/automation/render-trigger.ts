@@ -114,7 +114,7 @@ async function renderDirect(
   if (options.waveformStyle) props.waveformStyle = options.waveformStyle;
 
   console.log("\n" + "═".repeat(60));
-  console.log("Wonder Cabinet Video Render");
+  console.log("Audiogram Tools - Video Render");
   console.log("═".repeat(60));
   console.log(`Composition: ${composition}`);
   console.log(`Audio: ${options.audioPath}`);
@@ -157,7 +157,7 @@ function parseArgs(): RenderOptions {
 
   if (args.length === 0 || args[0] === "--help" || args[0] === "-h") {
     console.log(`
-Wonder Cabinet Video Render
+Audiogram Tools - Video Render
 
 Usage:
   npx ts-node render-trigger.ts <audio-file> [options]

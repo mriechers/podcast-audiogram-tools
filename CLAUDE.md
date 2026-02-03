@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Wonder Cabinet Video Automation — a Remotion 4.0 (React-based programmatic video) system that generates podcast videos from audio files. Two output formats: full YouTube episodes (16:9) and vertical social clips (9:16). Includes watch-folder automation, batch render queue, and YouTube upload integration.
+Audiogram Tools — a Remotion 4.0 (React-based programmatic video) system that generates podcast videos from audio files. Two output formats: full YouTube episodes (16:9) and vertical social clips (9:16). Includes watch-folder automation, batch render queue, and YouTube upload integration. Brand-specific styling (colors, logos, show name) lives in `brand.ts` and `src/public/` — fork this repo and customize those to match your podcast.
 
 ## Commands
 

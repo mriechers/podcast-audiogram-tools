@@ -1,7 +1,7 @@
 {
-  "name": "wonder-cabinet-tools",
+  "name": "audiogram-tools",
   "version": "1.0.0",
-  "description": "Automated podcast video generation for Wonder Cabinet",
+  "description": "Automated podcast video generation with Remotion",
   "main": "src/index.ts",
   "scripts": {
     "studio": "remotion studio",
@@ -19,7 +19,7 @@
     "video",
     "automation"
   ],
-  "author": "Wonder Cabinet Productions",
+  "author": "",
   "license": "ISC",
   "dependencies": {
     "@remotion/cli": "4.0.259",

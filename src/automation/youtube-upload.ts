@@ -18,6 +18,7 @@
  */
 
 import { google, youtube_v3 } from "googleapis";
+import { brand } from "../brand";
 import fs from "fs";
 import path from "path";
 import http from "http";
@@ -319,8 +320,8 @@ export function generateDescription(metadata: {
 
   lines.push("─".repeat(40));
   lines.push("");
-  lines.push("Wonder Cabinet is produced by Wisconsin Public Radio.");
-  lines.push("From the creators of To The Best Of Our Knowledge.");
+  lines.push(`${brand.show.name}`);
+  if (brand.show.tagline) lines.push(brand.show.tagline);
   lines.push("");
   lines.push("Subscribe for more episodes exploring the unknown.");
 
@@ -349,7 +350,7 @@ async function main(): Promise<void> {
       videoPath,
       title,
       description: generateDescription({ guestName: "Unknown" }),
-      tags: ["Wonder Cabinet", "podcast", "science", "curiosity"],
+      tags: [brand.show.name, "podcast"],
       privacyStatus: "private",
     });
 

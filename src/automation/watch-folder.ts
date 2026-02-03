@@ -250,7 +250,7 @@ async function processAudioFile(filepath: string): Promise<void> {
  */
 function main(): void {
   console.log("═".repeat(60));
-  console.log("Wonder Cabinet Video Automation");
+  console.log("Audiogram Tools - Watch Folder");
   console.log("═".repeat(60));
   console.log(`Watching: ${path.resolve(WATCH_DIR)}`);
   console.log(`Output:   ${path.resolve(OUTPUT_DIR)}`);

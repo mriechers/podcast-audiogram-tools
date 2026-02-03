@@ -1,6 +1,6 @@
-# Wonder Cabinet Video Automation
+# Audiogram Tools
 
-Automated podcast video generation for Wonder Cabinet, built with [Remotion](https://remotion.dev).
+Automated podcast video generation built with [Remotion](https://remotion.dev). Fork this repo and customize `brand.ts` and `src/public/` assets to match your podcast's visual identity.
 
 ## Features
 
@@ -9,7 +9,7 @@ Automated podcast video generation for Wonder Cabinet, built with [Remotion](htt
   - Full Episodes (16:9 @ 1920×1080) for YouTube
   - Social Clips (9:16 @ 1080×1920) for TikTok/Reels/Shorts
 - **Audio waveform visualization** synced to the music
-- **Brand-consistent animations** with galaxy spiral and Wonder Cabinet logo
+- **Brand-consistent animations** with customizable backgrounds and logo
 - **Watch folder automation** - drop audio, get video
 - **YouTube upload integration** with OAuth 2.0
 - **Batch rendering queue** for overnight processing
@@ -185,7 +185,7 @@ npx ts-node src/automation/youtube-upload.ts output/video.mp4 "Video Title"
 ## Directory Structure
 
 ```
-wonder-cabinet-tools/
+audiogram-tools/
 ├── src/
 │   ├── components/
 │   │   ├── Background.tsx      # Animated galaxy spiral
@@ -260,4 +260,4 @@ NODE_OPTIONS="--max-old-space-size=8192" npm run render:all
 
 For issues with Remotion, see [remotion.dev/docs](https://www.remotion.dev/docs).
 
-For Wonder Cabinet specific questions, contact the production team.
+For podcast-specific customization, see `brand.ts` and the `src/public/` assets directory.

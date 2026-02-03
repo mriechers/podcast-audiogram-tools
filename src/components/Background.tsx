@@ -25,7 +25,7 @@ interface BackgroundProps {
 }
 
 /**
- * Animated background for Wonder Cabinet podcast videos.
+ * Animated background for podcast videos.
  *
  * Features:
  * - Optional galaxy spiral image (brand asset)
