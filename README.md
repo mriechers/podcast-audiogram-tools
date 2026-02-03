@@ -1,6 +1,6 @@
-# Wonder Cabinet Video Automation
+# Automated Audiogram Creation for Podcasts
 
-Automated podcast video generation for Wonder Cabinet, built with [Remotion](https://remotion.dev).
+Automated podcast video generation built with [Remotion](https://remotion.dev). This flavor was built for [Wonder Cabinet Productions](https://wondercabinetproductions.com/). 
 
 ## Features
 
@@ -260,4 +260,4 @@ NODE_OPTIONS="--max-old-space-size=8192" npm run render:all
 
 For issues with Remotion, see [remotion.dev/docs](https://www.remotion.dev/docs).
 
-For Wonder Cabinet specific questions, contact the production team.
+For Wonder Cabinet specific questions, contact [the production team](https://wondercabinetproductions.com/).
