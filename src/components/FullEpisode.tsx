@@ -20,6 +20,8 @@ export interface FullEpisodeProps {
   waveformStyle?: WaveformStyle;
   /** Color scheme preset */
   colorScheme?: ColorScheme;
+  /** Custom background image filename (in public/). Replaces galaxy spiral */
+  backgroundImage?: string;
 }
 
 /**
@@ -39,6 +41,7 @@ export const FullEpisode: React.FC<FullEpisodeProps> = ({
   showLogo = true,
   waveformStyle = "mirror",
   colorScheme = "dark",
+  backgroundImage,
 }) => {
   const colors = colorSchemes[colorScheme];
   const hasAudio = audioSrc && audioSrc.length > 0;
@@ -47,13 +50,30 @@ export const FullEpisode: React.FC<FullEpisodeProps> = ({
     <AbsoluteFill>
       {/* Layer 1: Animated Background with Galaxy Spiral */}
       <Background
-        useGalaxySpiral={true}
+        useGalaxySpiral={!backgroundImage}
+        backgroundImage={backgroundImage}
         primaryColor={colors.primaryColor}
         secondaryColor={colors.secondaryColor}
         accentColor={colors.accentColor}
         rotationSpeed={0.3}
         pulseIntensity={0.4}
       />
+
+      {/* Layer 1.5: Text backdrop for legibility over photos */}
+      {backgroundImage && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "70%",
+            background:
+              "linear-gradient(to bottom, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.45) 60%, transparent 100%)",
+            pointerEvents: "none",
+          }}
+        />
+      )}
 
       {/* Layer 2: Text Overlays - fade in at start */}
       <Sequence from={0}>
@@ -74,8 +94,8 @@ export const FullEpisode: React.FC<FullEpisodeProps> = ({
         color={colors.waveformColor}
         secondaryColor={colors.accentColor}
         barCount={64}
-        smoothing={0.8}
-        intensity={1.2}
+        smoothing={backgroundImage ? 0.5 : 0.8}
+        intensity={backgroundImage ? 3 : 1.2}
         position="bottom"
       />
 

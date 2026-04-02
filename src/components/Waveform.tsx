@@ -56,11 +56,20 @@ export const Waveform: React.FC<WaveformProps> = ({
       return 0.3 + Math.sin(phase) * 0.2 + Math.sin(phase * 2.5) * 0.1;
     });
   } else {
-    visualization = visualizeAudio({
+    const raw = visualizeAudio({
       fps,
       frame,
       audioData,
       numberOfSamples: barCount,
+      smoothing: smoothing >= 0.5,
+      optimizeFor: "accuracy",
+    });
+
+    // Compensate for frequency rolloff — speech/music energy is concentrated
+    // in low bins, so higher bins need proportionally more boost to look balanced
+    visualization = raw.map((v, i) => {
+      const freqBoost = 1 + (i / raw.length) * 5;
+      return Math.min(1, v * freqBoost);
     });
   }
 

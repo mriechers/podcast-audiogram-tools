@@ -63,6 +63,17 @@ Components detect aspect ratio (`height > width`) to adapt layout for vertical v
 
 Color scheme names are used as Zod enum values in composition props and as keys in `colorSchemes`.
 
+**Typography:** Headlines use Jost (Google Fonts fallback for Futura PT), body/subtitles use EB Garamond (fallback for Adobe Garamond Pro). Fonts are loaded via `src/fonts.css`. The canonical design system is at `podcast-publishing-suite/shows/wonder-cabinet/DESIGN_SYSTEM.md` — always reference it for color, type, and spacing decisions.
+
+**Custom backgrounds:** `FullEpisode`, `SocialClip`, and `Thumbnail` components accept an optional `backgroundImage` prop (filename in `public/`). When provided, it replaces the galaxy spiral with a full-bleed photo and adds a dark gradient overlay for text legibility.
+
+### Rendering Gotchas
+
+- **`staticFile()` and CLI props:** Props passed via `--props` JSON are raw strings — they don't go through `staticFile()`. For one-off renders, create a dedicated `<Composition>` with `staticFile()` in `defaultProps` rather than fighting the CLI.
+- **Duration override:** Composition `durationInFrames` is a hard ceiling. To render longer audio, either update the composition's `durationInFrames` directly or create a new composition entry with the correct frame count (fps × seconds).
+- **Waveform frequency balance:** `visualizeAudio` returns linear FFT bins — speech/music energy clusters in the low bins (left side). The Waveform component applies frequency compensation (`freqBoost`) to spread movement across all bars.
+- **Thumbnails:** Use `npx remotion still <CompositionId> output.png` to render a single frame. The `Thumbnail` component is purpose-built for stills with larger text than the video overlay.
+
 ### Automation Pipeline
 
 `src/automation/` contains four modules that form a pipeline:

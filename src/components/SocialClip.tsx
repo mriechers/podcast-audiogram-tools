@@ -20,6 +20,8 @@ export interface SocialClipProps {
   colorScheme?: ColorScheme;
   /** Position of text overlay */
   textPosition?: "top" | "center" | "bottom";
+  /** Custom background image filename (in public/). Replaces galaxy spiral */
+  backgroundImage?: string;
 }
 
 /**
@@ -45,6 +47,7 @@ export const SocialClip: React.FC<SocialClipProps> = ({
   waveformStyle = "circle",
   colorScheme = "dark",
   textPosition = "top",
+  backgroundImage,
 }) => {
   const colors = colorSchemes[colorScheme];
   const hasAudio = audioSrc && audioSrc.length > 0;
@@ -53,7 +56,8 @@ export const SocialClip: React.FC<SocialClipProps> = ({
     <AbsoluteFill>
       {/* Layer 1: Animated Background */}
       <Background
-        useGalaxySpiral={true}
+        useGalaxySpiral={!backgroundImage}
+        backgroundImage={backgroundImage}
         primaryColor={colors.primaryColor}
         secondaryColor={colors.secondaryColor}
         accentColor={colors.accentColor}

@@ -4,6 +4,8 @@ import { z } from "zod";
 import { FullEpisode } from "./components/FullEpisode";
 import { SocialClip } from "./components/SocialClip";
 import { OriginalTemplate } from "./components/OriginalTemplate";
+import { Thumbnail } from "./components/Thumbnail";
+import "./fonts.css";
 
 // Schema definitions for type-safe props
 const waveformStyleSchema = z.enum(["bars", "mirror", "circle", "line"]);
@@ -17,6 +19,7 @@ const fullEpisodeSchema = z.object({
   showLogo: z.boolean().optional(),
   waveformStyle: waveformStyleSchema.optional(),
   colorScheme: colorSchemeSchema.optional(),
+  backgroundImage: z.string().optional(),
 });
 
 const socialClipSchema = z.object({
@@ -27,6 +30,7 @@ const socialClipSchema = z.object({
   waveformStyle: waveformStyleSchema.optional(),
   colorScheme: colorSchemeSchema.optional(),
   textPosition: z.enum(["top", "center", "bottom"]).optional(),
+  backgroundImage: z.string().optional(),
 });
 
 // Default props
@@ -189,6 +193,29 @@ export const RemotionRoot: React.FC = () => {
       />
 
       {/* ═══════════════════════════════════════════════════════════════
+          ONE-OFF: Sun Salutation bonus episode
+          ═══════════════════════════════════════════════════════════════ */}
+      <Composition
+        id="SunSalutation"
+        component={FullEpisode}
+        schema={fullEpisodeSchema}
+        durationInFrames={6283}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={{
+          audioSrc: staticFile("sun-salutation.mp3"),
+          guestName: "Marcelo Gleiser",
+          episodeNumber: "Bonus",
+          episodeTitle: "A Sun Salutation on the Island of Knowledge",
+          showLogo: true,
+          waveformStyle: "bars" as const,
+          colorScheme: "dark" as const,
+          backgroundImage: "sun-salutation-art.jpeg",
+        }}
+      />
+
+      {/* ═══════════════════════════════════════════════════════════════
           ORIGINAL AE TEMPLATE - 1:1 Recreation
           ═══════════════════════════════════════════════════════════════ */}
       <Composition
@@ -200,6 +227,29 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
         defaultProps={originalTemplateDefaultProps}
+      />
+      {/* ═══════════════════════════════════════════════════════════════
+          THUMBNAIL: Sun Salutation
+          ═══════════════════════════════════════════════════════════════ */}
+      <Composition
+        id="SunSalutation-Thumb"
+        component={Thumbnail}
+        schema={z.object({
+          guestName: z.string().optional(),
+          episodeNumber: z.union([z.string(), z.number()]).optional(),
+          episodeTitle: z.string().optional(),
+          showLogo: z.boolean().optional(),
+          backgroundImage: z.string().optional(),
+        })}
+        durationInFrames={1}
+        fps={30}
+        width={1920}
+        height={1080}
+        defaultProps={{
+          guestName: "Sun Salutation",
+          showLogo: true,
+          backgroundImage: "sun-salutation-art.jpeg",
+        }}
       />
     </>
   );

@@ -125,7 +125,7 @@ export const TextOverlay: React.FC<TextOverlayProps> = ({
             textTransform: "uppercase",
             textShadow,
             marginBottom: 16,
-            fontFamily: brand.typography.fontFamily,
+            fontFamily: brand.typography.fontHeadline,
           }}
         />
       )}
@@ -144,7 +144,7 @@ export const TextOverlay: React.FC<TextOverlayProps> = ({
             marginBottom: 12,
             lineHeight: 1.15,
             maxWidth: isVertical ? "100%" : "85%",
-            fontFamily: brand.typography.fontFamily,
+            fontFamily: brand.typography.fontHeadline,
           }}
         />
       )}
@@ -157,12 +157,13 @@ export const TextOverlay: React.FC<TextOverlayProps> = ({
           style={{
             fontSize: titleSize,
             fontWeight: brand.typography.weights.regular,
+            fontStyle: "italic",
             color: brand.colors.textSecondary,
+            fontFamily: brand.typography.fontBody,
             textAlign: "center",
             textShadow,
             maxWidth: isVertical ? "100%" : "75%",
             lineHeight: 1.4,
-            fontFamily: brand.typography.fontFamily,
           }}
         />
       )}
@@ -289,7 +290,7 @@ export const SocialTextOverlay: React.FC<{
             textShadow,
             textAlign: "center",
             marginBottom: hookText ? 14 : 0,
-            fontFamily: brand.typography.fontFamily,
+            fontFamily: brand.typography.fontHeadline,
           }}
         >
           {guestName}
@@ -305,7 +306,7 @@ export const SocialTextOverlay: React.FC<{
             textAlign: "center",
             maxWidth: "90%",
             lineHeight: 1.35,
-            fontFamily: brand.typography.fontFamily,
+            fontFamily: brand.typography.fontHeadline,
           }}
         >
           "{hookText}"

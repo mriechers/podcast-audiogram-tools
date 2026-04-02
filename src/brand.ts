@@ -32,9 +32,15 @@ export const brand = {
   },
 
   typography: {
-    /** Primary font stack - system fonts for broad compatibility */
+    /** Headline font — Futura PT with Jost as free fallback */
+    fontHeadline:
+      '"Futura PT", "Jost", "Nunito Sans", sans-serif',
+    /** Body font — Adobe Garamond Pro with EB Garamond as free fallback */
+    fontBody:
+      '"Adobe Garamond Pro", "EB Garamond", "Garamond", Georgia, serif',
+    /** Legacy system font stack for backward compatibility */
     fontFamily:
-      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+      '"Futura PT", "Jost", "Nunito Sans", sans-serif',
     /** Weights */
     weights: {
       regular: 400,

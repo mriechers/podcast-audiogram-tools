@@ -12,6 +12,8 @@ import { brand } from "../brand";
 interface BackgroundProps {
   /** Use the galaxy spiral image asset */
   useGalaxySpiral?: boolean;
+  /** Custom background image filename (in public/). Replaces galaxy spiral when provided */
+  backgroundImage?: string;
   /** Primary background color */
   primaryColor?: string;
   /** Secondary color for gradient */
@@ -36,6 +38,7 @@ interface BackgroundProps {
  */
 export const Background: React.FC<BackgroundProps> = ({
   useGalaxySpiral = true,
+  backgroundImage,
   primaryColor = brand.colors.backgroundDark,
   secondaryColor = brand.colors.backgroundMedium,
   accentColor = brand.colors.primary,
@@ -86,8 +89,28 @@ export const Background: React.FC<BackgroundProps> = ({
         }}
       />
 
-      {/* Galaxy spiral image */}
-      {useGalaxySpiral && (
+      {/* Custom background image (full-bleed, no rotation) */}
+      {backgroundImage && (
+        <div
+          style={{
+            position: "absolute",
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          <Img
+            src={staticFile(backgroundImage)}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
+        </div>
+      )}
+
+      {/* Galaxy spiral image (used when no custom background) */}
+      {!backgroundImage && useGalaxySpiral && (
         <div
           style={{
             position: "absolute",
