@@ -27,7 +27,13 @@ import "dotenv/config";
 
 // Configuration
 const TOKEN_PATH = ".youtube-token.json";
-const SCOPES = ["https://www.googleapis.com/auth/youtube.upload"];
+// youtube.upload covers videos.insert + thumbnails.set; youtube.force-ssl is
+// additionally required for captions.insert (caption upload). Both are needed
+// for end-to-end episode publishing.
+const SCOPES = [
+  "https://www.googleapis.com/auth/youtube.upload",
+  "https://www.googleapis.com/auth/youtube.force-ssl",
+];
 
 interface UploadOptions {
   videoPath: string;
