@@ -13,6 +13,7 @@
 
 import fs from "fs";
 import path from "path";
+import { z } from "zod";
 
 export interface ComposedMetadata {
   title: string;
@@ -23,11 +24,42 @@ export interface ComposedMetadata {
   thumbnailPath?: string;
 }
 
+// Minimal manifest shape we consume. Manifests in the wild may have many
+// other fields; we only validate what we read here.
+const ManifestSchema = z.object({
+  episodeNumber: z.union([z.number(), z.string()]).optional(),
+  guestName: z.string(),
+  title: z.string().optional(),
+  ghost: z.object({
+    url: z.string().optional(),
+    publicUrl: z.string().optional(),
+    title: z.string().optional(),
+  }).optional(),
+});
+
+type Manifest = z.infer<typeof ManifestSchema>;
+
 interface ComposeOpts {
   episodeDir: string;       // shows/wonder-cabinet/episodes/<slug>/
-  videoPath: string;
   thumbnailPath?: string;
   privacyStatus?: ComposedMetadata["privacyStatus"];
+}
+
+/**
+ * YouTube enforces both a per-video tag count limit (~30 effective) and a
+ * total-character limit across all tags (~500). Drop tags from the end once
+ * either limit is reached.
+ */
+function truncateTagsByBudget(tags: string[], maxCount: number, maxChars: number): string[] {
+  const result: string[] = [];
+  let chars = 0;
+  for (const tag of tags) {
+    if (result.length >= maxCount) break;
+    if (chars + tag.length > maxChars) break;
+    result.push(tag);
+    chars += tag.length;
+  }
+  return result;
 }
 
 export function composeMetadata(opts: ComposeOpts): ComposedMetadata {
@@ -36,9 +68,10 @@ export function composeMetadata(opts: ComposeOpts): ComposedMetadata {
   // 1. Read manifest.json
   const manifestPath = path.join(episodeDir, "manifest.json");
   if (!fs.existsSync(manifestPath)) throw new Error(`No manifest at ${manifestPath}`);
-  const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
+  const manifestRaw = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
+  const manifest: Manifest = ManifestSchema.parse(manifestRaw);
 
-  const epNum: number = manifest.episodeNumber;
+  const epNum = manifest.episodeNumber;
   const guest: string = manifest.guestName;
 
   // Ghost URL — manifest may use either ghost.url or ghost.publicUrl
@@ -62,7 +95,7 @@ export function composeMetadata(opts: ComposeOpts): ComposedMetadata {
   return {
     title: title.slice(0, 100),
     description: description.slice(0, 5000),
-    tags: tags.slice(0, 30),
+    tags: truncateTagsByBudget(tags, 30, 500),
     categoryId: "27",  // Education
     privacyStatus,
     thumbnailPath,
@@ -95,8 +128,9 @@ function readKeywords(keywordsMdPath: string): string[] {
   return fs.readFileSync(keywordsMdPath, "utf-8")
     .split("\n")
     .map(l => l.trim())
-    .filter(l => l && !l.startsWith("#") && !l.startsWith("-"))
-    .map(l => l.replace(/^[•*]\s*/, ""));
+    .filter(l => l && !l.startsWith("#"))   // skip blanks + comments
+    .map(l => l.replace(/^[-•*]\s*/, ""))    // strip ANY bullet style
+    .filter(l => l.length > 0);              // drop now-empty lines (was just a bullet)
 }
 
 function composeDescription(opts: {
@@ -136,6 +170,6 @@ if (require.main === module) {
     console.error("Usage: npx tsx src/automation/compose-metadata.ts <episode-dir>");
     process.exit(1);
   }
-  const md = composeMetadata({ episodeDir: epDir, videoPath: "" });
+  const md = composeMetadata({ episodeDir: epDir });
   console.log(JSON.stringify(md, null, 2));
 }
