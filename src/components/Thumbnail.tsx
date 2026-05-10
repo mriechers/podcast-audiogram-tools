@@ -3,10 +3,7 @@ import { AbsoluteFill, Img, staticFile } from "remotion";
 import { Background } from "./Background";
 import { brand } from "../brand";
 import { OrientationConfig } from "../template/types";
-import { SolidBackground } from "../template/layers/SolidBackground";
-import { GalaxySpiral } from "../template/layers/GalaxySpiral";
-import { CabinetFrame } from "../template/layers/CabinetFrame";
-import { TitleImage } from "../template/layers/TitleImage";
+import { LayerRenderer } from "../template/ShowTemplate";
 
 export interface ThumbnailProps {
   guestName?: string;
@@ -31,21 +28,10 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({
   if (templateConfig) {
     return (
       <AbsoluteFill>
-        {templateConfig.layers.map((layer, i) => {
-          switch (layer.type) {
-            case "solid":
-              return <SolidBackground key={i} color={layer.color} grain={layer.grain} />;
-            case "spiral":
-              // rotationSpeed=0 locks the spiral for a stable static thumbnail
-              return <GalaxySpiral key={i} asset={layer.asset} rotationSpeed={0} opacity={layer.opacity} />;
-            case "cabinet-frame":
-              return <CabinetFrame key={i} asset={layer.asset} artClip={layer.artClip} episodeArtSrc={episodeArtSrc} />;
-            case "title-image":
-              return <TitleImage key={i} asset={layer.asset} layout={layer.layout} leftAsset={layer.leftAsset} rightAsset={layer.rightAsset} />;
-            default:
-              return null;
-          }
-        })}
+        {templateConfig.layers.map((layer, i) => (
+          // spiralRotationOverride=0 locks the spiral for a stable static thumbnail
+          <LayerRenderer key={i} layer={layer} episodeArtSrc={episodeArtSrc} spiralRotationOverride={0} />
+        ))}
       </AbsoluteFill>
     );
   }
