@@ -323,9 +323,11 @@ export async function uploadCaptions(opts: {
     console.log(`Captions uploaded: ${captionId}`);
     return captionId;
   } catch (err: unknown) {
-    const status = (err as { status?: number; code?: number }).status
-      ?? (err as { status?: number; code?: number }).code;
-    if (status === 403) {
+    // Gaxios error shape: .status is numeric HTTP status (newer); .code is
+    // string-or-number (older). Coerce to number so "403" and 403 both match.
+    const rawStatus = (err as { status?: number | string; code?: number | string }).status
+      ?? (err as { status?: number | string; code?: number | string }).code;
+    if (Number(rawStatus) === 403) {
       throw new Error(
         "Caption upload forbidden (403). The stored OAuth token is likely missing " +
         "the youtube.force-ssl scope. Re-run authorization to refresh scopes:\n" +
