@@ -45,6 +45,8 @@ interface UploadOptions {
   scheduledStartTime?: string; // ISO 8601 format for scheduled publish
   playlistId?: string;
   thumbnailPath?: string;
+  /** Optional pre-authenticated client. If omitted, calls getAuthenticatedClient(). */
+  auth?: Awaited<ReturnType<typeof getAuthenticatedClient>>;
 }
 
 interface UploadResult {
@@ -182,6 +184,7 @@ export async function uploadVideo(options: UploadOptions): Promise<UploadResult>
     privacyStatus = "private",
     scheduledStartTime,
     thumbnailPath,
+    auth: providedAuth,
   } = options;
 
   // Validate video file exists
@@ -196,8 +199,9 @@ export async function uploadVideo(options: UploadOptions): Promise<UploadResult>
   console.log(`Title: ${title}`);
   console.log(`Privacy: ${privacyStatus}`);
 
-  // Get authenticated client
-  const auth = await getAuthenticatedClient();
+  // Get authenticated client (use provided client if available to share auth
+  // state with sibling calls — avoids stale-closure race in token refresh handler)
+  const auth = providedAuth ?? (await getAuthenticatedClient());
   const youtube = google.youtube({ version: "v3", auth });
 
   // Prepare video metadata

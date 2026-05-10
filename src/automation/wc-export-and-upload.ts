@@ -21,7 +21,7 @@
 import fs from "fs";
 import path from "path";
 import { spawn } from "child_process";
-import { uploadVideo, uploadCaptions } from "./youtube-upload";
+import { uploadVideo, uploadCaptions, getAuthenticatedClient } from "./youtube-upload";
 import { composeMetadata } from "./compose-metadata";
 import "dotenv/config";
 
@@ -238,18 +238,20 @@ async function main(): Promise<void> {
 
   // --- Steps 5+6: Upload video (includes thumbnail) and captions ---
   console.log("\n=== [4/4] Uploading to YouTube as draft ===");
-
+  // Pre-warm auth so any credential issues fail fast (before the upload starts)
+  // AND so the same client is reused for both uploads — avoids the stale-closure
+  // race in the token refresh handler when refresh happens during a long upload.
+  const auth = await getAuthenticatedClient();
   const result = await uploadVideo({
     videoPath,
+    auth,
     ...metadata,
   });
 
-  // uploadVideo already called getAuthenticatedClient() internally.
-  // uploadCaptions re-calls it but the file-based token cache makes this
-  // cheap — no second OAuth round-trip in normal operation.
   await uploadCaptions({
     videoId: result.videoId,
     srtPath: captionsPath,
+    auth,
   });
 
   // --- Step 7: Write YouTube URL back to manifest ---
@@ -259,7 +261,12 @@ async function main(): Promise<void> {
     uploadedAt: new Date().toISOString(),
     privacyStatus: metadata.privacyStatus,
   };
-  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+  // Atomic write: temp file + rename. Same filesystem (episode folder is on
+  // repo SSD), so rename is a single atomic syscall. Prevents stale manifest
+  // if process is killed between upload completion and disk flush.
+  const manifestTmp = manifestPath + ".tmp";
+  fs.writeFileSync(manifestTmp, JSON.stringify(manifest, null, 2));
+  fs.renameSync(manifestTmp, manifestPath);
 
   console.log(`\nDone. Draft: ${result.videoUrl}`);
   console.log(`  manifest.json updated with youtube.videoId + youtube.url`);
