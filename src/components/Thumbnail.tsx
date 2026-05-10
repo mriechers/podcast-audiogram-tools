@@ -2,6 +2,11 @@ import React from "react";
 import { AbsoluteFill, Img, staticFile } from "remotion";
 import { Background } from "./Background";
 import { brand } from "../brand";
+import { OrientationConfig } from "../template/types";
+import { SolidBackground } from "../template/layers/SolidBackground";
+import { GalaxySpiral } from "../template/layers/GalaxySpiral";
+import { CabinetFrame } from "../template/layers/CabinetFrame";
+import { TitleImage } from "../template/layers/TitleImage";
 
 export interface ThumbnailProps {
   guestName?: string;
@@ -9,6 +14,8 @@ export interface ThumbnailProps {
   episodeTitle?: string;
   showLogo?: boolean;
   backgroundImage?: string;
+  templateConfig?: OrientationConfig;
+  episodeArtSrc?: string;
 }
 
 export const Thumbnail: React.FC<ThumbnailProps> = ({
@@ -17,7 +24,32 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({
   episodeTitle,
   showLogo = true,
   backgroundImage,
+  templateConfig,
+  episodeArtSrc,
 }) => {
+  // WC template path: render the branded layer stack at thumbnail dimensions
+  if (templateConfig) {
+    return (
+      <AbsoluteFill>
+        {templateConfig.layers.map((layer, i) => {
+          switch (layer.type) {
+            case "solid":
+              return <SolidBackground key={i} color={layer.color} grain={layer.grain} />;
+            case "spiral":
+              // rotationSpeed=0 locks the spiral for a stable static thumbnail
+              return <GalaxySpiral key={i} asset={layer.asset} rotationSpeed={0} opacity={layer.opacity} />;
+            case "cabinet-frame":
+              return <CabinetFrame key={i} asset={layer.asset} artClip={layer.artClip} episodeArtSrc={episodeArtSrc} />;
+            case "title-image":
+              return <TitleImage key={i} asset={layer.asset} layout={layer.layout} leftAsset={layer.leftAsset} rightAsset={layer.rightAsset} />;
+            default:
+              return null;
+          }
+        })}
+      </AbsoluteFill>
+    );
+  }
+
   const textShadow =
     "0 3px 30px rgba(0,0,0,0.8), 0 6px 60px rgba(0,0,0,0.5)";
 
