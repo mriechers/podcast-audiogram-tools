@@ -153,6 +153,11 @@ async function main(): Promise<void> {
     "--art", art,
     "--output", thumbnailPath,
   ]);
+  if (!fs.existsSync(thumbnailPath) || fs.statSync(thumbnailPath).size === 0) {
+    throw new Error(
+      `Thumbnail render reported success but file is missing or empty: ${thumbnailPath}`
+    );
+  }
   console.log(`  Thumbnail: ${thumbnailPath}`);
 
   // --- Step 3: Render full episode video ---
@@ -178,6 +183,17 @@ async function main(): Promise<void> {
       OUTPUT_DIR: audiogramDir,
     };
 
+    // Snapshot pre-existing EP{n}_*.mp4 files before spawning so we can
+    // identify the new render by diff rather than readdir order. Without this,
+    // a stale file from a prior run could be picked up instead of today's.
+    const preExistingEpFiles = new Set(
+      fs.existsSync(audiogramDir)
+        ? fs.readdirSync(audiogramDir).filter(
+            (n) => n.startsWith(`EP${epNum}_`) && n.endsWith(".mp4")
+          )
+        : []
+    );
+
     await new Promise<void>((resolve, reject) => {
       const proc = spawn(
         "npx",
@@ -201,18 +217,28 @@ async function main(): Promise<void> {
       proc.on("error", reject);
     });
 
-    // render-trigger names the file EP{n}_{safeName}_{date}.mp4.
-    // Find it and rename to our canonical slug-based path.
-    const rendered = findFirst(
-      audiogramDir,
+    // Diff against pre-render snapshot to find the file render-trigger just
+    // produced. Using a set diff avoids the readdir-order ambiguity that could
+    // cause a stale EP{n}_*.mp4 from a prior run to be picked up.
+    const postRenderFiles = fs.readdirSync(audiogramDir).filter(
       (n) => n.startsWith(`EP${epNum}_`) && n.endsWith(".mp4")
     );
-    if (!rendered) {
+    const newFiles = postRenderFiles.filter((n) => !preExistingEpFiles.has(n));
+
+    if (newFiles.length === 0) {
       throw new Error(
         `render-trigger output not found in ${audiogramDir}. ` +
         "Check OUTPUT_DIR is being respected by render-trigger."
       );
     }
+    if (newFiles.length > 1) {
+      throw new Error(
+        `Multiple new render outputs found (ambiguous): ${newFiles.join(", ")}. ` +
+        "Clean the audiogram folder and re-run."
+      );
+    }
+    const rendered = path.join(audiogramDir, newFiles[0]);
+
     if (rendered !== videoPath) {
       fs.renameSync(rendered, videoPath);
     }

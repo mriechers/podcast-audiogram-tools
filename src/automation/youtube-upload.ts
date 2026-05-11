@@ -26,7 +26,9 @@ import url from "url";
 import "dotenv/config";
 
 // Configuration
-const TOKEN_PATH = ".youtube-token.json";
+// Anchored to __dirname (src/automation/) so callers from any cwd find the
+// same token file. Resolves to modules/audiogram-tools/.youtube-token.json.
+const TOKEN_PATH = path.join(__dirname, "..", "..", ".youtube-token.json");
 // youtube.upload covers videos.insert + thumbnails.set; youtube.force-ssl is
 // additionally required for captions.insert (caption upload). Both are needed
 // for end-to-end episode publishing.
