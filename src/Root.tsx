@@ -322,6 +322,26 @@ export const RemotionRoot: React.FC = () => {
           durationInFrames: props.durationInFrames ?? 30 * 60,
         })}
       />
+
+      {/* ═══════════════════════════════════════════════════════════════
+          WC THUMBNAIL - 1280×720 static still for YouTube thumbnails
+          ═══════════════════════════════════════════════════════════════ */}
+      <Composition
+        id="WC-Thumbnail"
+        component={Thumbnail}
+        schema={z.object({
+          templateConfig: OrientationSchema,
+          episodeArtSrc: z.string().optional(),
+        })}
+        durationInFrames={1}
+        fps={30}
+        width={1280}
+        height={720}
+        defaultProps={{
+          templateConfig: { ...wcHorizontalConfig, width: 1280, height: 720 },
+          episodeArtSrc: "",
+        }}
+      />
     </>
   );
 };

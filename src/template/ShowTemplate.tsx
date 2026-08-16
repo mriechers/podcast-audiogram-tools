@@ -50,11 +50,16 @@ export const ShowTemplate: React.FC<ShowTemplateProps> = ({
 
 /**
  * Routes a LayerDef to the appropriate component.
+ *
+ * @param spiralRotationOverride - When provided, overrides the layer's
+ *   rotationSpeed for GalaxySpiral. Pass 0 to produce a static spiral
+ *   (e.g. for thumbnail stills).
  */
-const LayerRenderer: React.FC<{
+export const LayerRenderer: React.FC<{
   layer: LayerDef;
   episodeArtSrc?: string;
-}> = ({ layer, episodeArtSrc }) => {
+  spiralRotationOverride?: number;
+}> = ({ layer, episodeArtSrc, spiralRotationOverride }) => {
   switch (layer.type) {
     case "solid":
       return <SolidBackground color={layer.color} grain={layer.grain} />;
@@ -62,7 +67,11 @@ const LayerRenderer: React.FC<{
       return (
         <GalaxySpiral
           asset={layer.asset}
-          rotationSpeed={layer.rotationSpeed}
+          rotationSpeed={
+            spiralRotationOverride !== undefined
+              ? spiralRotationOverride
+              : layer.rotationSpeed
+          }
           opacity={layer.opacity}
         />
       );

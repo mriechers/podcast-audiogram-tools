@@ -2,6 +2,8 @@ import React from "react";
 import { AbsoluteFill, Img, staticFile } from "remotion";
 import { Background } from "./Background";
 import { brand } from "../brand";
+import { OrientationConfig } from "../template/types";
+import { LayerRenderer } from "../template/ShowTemplate";
 
 export interface ThumbnailProps {
   guestName?: string;
@@ -9,6 +11,8 @@ export interface ThumbnailProps {
   episodeTitle?: string;
   showLogo?: boolean;
   backgroundImage?: string;
+  templateConfig?: OrientationConfig;
+  episodeArtSrc?: string;
 }
 
 export const Thumbnail: React.FC<ThumbnailProps> = ({
@@ -17,7 +21,21 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({
   episodeTitle,
   showLogo = true,
   backgroundImage,
+  templateConfig,
+  episodeArtSrc,
 }) => {
+  // WC template path: render the branded layer stack at thumbnail dimensions
+  if (templateConfig) {
+    return (
+      <AbsoluteFill>
+        {templateConfig.layers.map((layer, i) => (
+          // spiralRotationOverride=0 locks the spiral for a stable static thumbnail
+          <LayerRenderer key={i} layer={layer} episodeArtSrc={episodeArtSrc} spiralRotationOverride={0} />
+        ))}
+      </AbsoluteFill>
+    );
+  }
+
   const textShadow =
     "0 3px 30px rgba(0,0,0,0.8), 0 6px 60px rgba(0,0,0,0.5)";
 
